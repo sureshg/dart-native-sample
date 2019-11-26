@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:basic_utils/basic_utils.dart';
+import 'package:dart_native_sample/utils.dart' as cert_util;
 import 'package:resource/resource.dart';
 
 main() async {
@@ -18,7 +19,9 @@ main() async {
   } catch (e, s) {
     //stderr.writeln(s);
     print(e);
-    exit(-1);
+    print('Using the default certs');
+    cert = cert_util.cert;
+    key = cert_util.key;
   }
 
   // Start HTTPS server and handle requests.
