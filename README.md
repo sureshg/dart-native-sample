@@ -1,6 +1,6 @@
 ## Dart2Native sample web server app.
 
- A sample dart web app compile to native executable using [Dart2Native][Dart2Native] tool.
+ A sample dart web app compiles to native executable using [Dart2Native][Dart2Native] tool.
 
 [![GitHub Workflow Status][ShieldIO-Badge]][github-action]
 
