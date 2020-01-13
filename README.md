@@ -2,6 +2,9 @@
 
  A sample dart web app compile to native executable using [Dart2Native][Dart2Native] tool.
 
+[![Workflow Status](https://github.com/sureshg/dart-native-sample/workflows/Dart%20CI/badge.svg?branch=master)][github-action]
+
+
 #### Generate X509 Cert
 
 ```bash
@@ -22,3 +25,4 @@ $ ./test-server
 
 
 [Dart2Native]: https://dart.dev/tools/dart2native
+[github-action]: https://github.com/sureshg/dart-native-sample/actions

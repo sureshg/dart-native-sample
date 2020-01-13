@@ -1,7 +1,15 @@
-name: Dart CI
+name: Dart2Native Build
 
-on: [push]
+# Trigger setup
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
 
+# Build Jobs
 jobs:
   build:
 

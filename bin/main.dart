@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:dart_native_sample/utils.dart' as cert_util;
 import 'package:resource/resource.dart';
 
-main() async {
+void main() async {
+  print('Using DartLang: ${Platform.version}');
   registerSignalHandler();
 
   // Read the certs and key
   String cert, key;
   try {
     cert =
-        await const Resource("lib/certs/cert.pem").readAsString(encoding: utf8);
+        await const Resource('lib/certs/cert.pem').readAsString(encoding: utf8);
     key =
-        await const Resource("lib/certs/key.pem").readAsString(encoding: utf8);
+        await const Resource('lib/certs/key.pem').readAsString(encoding: utf8);
   } catch (e, s) {
     //stderr.writeln(s);
     print(e);
@@ -30,8 +30,8 @@ main() async {
     ..usePrivateKeyBytes(utf8.encode(key))
     ..setTrustedCertificatesBytes(utf8.encode(cert));
 
-  var port = const int.fromEnvironment("defaultPort", defaultValue: 8443);
-  HttpServer server = await HttpServer.bindSecure(
+  var port = const int.fromEnvironment('defaultPort', defaultValue: 8443);
+  var server = await HttpServer.bindSecure(
       InternetAddress.anyIPv4, port, securityContext);
 
   var uri = Uri.parse('https://${server.address.host}:${server.port}/');
@@ -42,7 +42,7 @@ main() async {
   // Send HTTPS request using [HttpClient]
   print('Sending ${uri.scheme} request : ${uri.path}');
   var client = HttpClient(context: securityContext)
-    ..userAgent = "Dart2NativeApp";
+    ..userAgent = 'Dart2NativeApp';
   var req = await client.getUrl(uri)
     ..headers.contentType = ContentType.json
     ..followRedirects = true;
@@ -50,7 +50,7 @@ main() async {
 
   // Response JSON from server
   printCertDetails(res);
-  String resString = await utf8.decoder.bind(res).join();
+  var resString = await utf8.decoder.bind(res).join();
   var resJson = json.decode(resString) as Map<String, dynamic>;
   print('Response JSON  : $resJson');
 }
@@ -58,11 +58,8 @@ main() async {
 /// Print the server cert details
 void printCertDetails(HttpClientResponse res) {
   print('Server Cert Subject: ${res.certificate.subject}');
-  var sanIPs = X509Utils.x509CertificateFromPem(res.certificate.pem)
-      .subjectAlternativNames
-      .map((n) => Uint8List.fromList(n.codeUnits).join("."))
-      .toList();
-  print('Server Cert SAN: ${sanIPs}');
+  var certData = X509Utils.x509CertificateFromPem(res.certificate.pem);
+  print('Server Cert SAN: ${certData.subjectAlternativNames}');
 }
 
 /// Handle all Http requests
@@ -70,9 +67,9 @@ void handleRequests(HttpServer server) async {
   await for (HttpRequest req in server) {
     print('Got ${req.method} request: ${req.uri.path}');
     var res = {
-      "path": req.uri.toString(),
-      "message": "Hello Dart2Native",
-      "time": DateTime.now().toIso8601String()
+      'path': req.uri.toString(),
+      'message': 'Hello Dart2Native',
+      'time': DateTime.now().toIso8601String()
     };
 
     req.response
