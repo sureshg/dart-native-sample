@@ -1,0 +1,103 @@
+name: Cross compile
+on: [push]
+
+jobs:
+  build:
+    name: Compile
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      # https://help.github.com/ja/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#supported-runners-and-hardware-resources
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+            file-name: windows.exe
+          - os: ubuntu-latest
+            file-name: ubuntu
+          - os: macos-latest
+            file-name: macos
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        # https://dart.dev/get-dart
+      - name: Install Dart(windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install dart-sdk
+      - name: Install Dart(ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https
+          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -'
+          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+          sudo apt-get update
+          sudo apt-get install dart
+      - name: Install Dart(macos)
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew tap dart-lang/dart
+          brew install dart
+      - name: Build(windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+          refreshenv
+          pub get
+          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
+      - name: Build(ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo 'export PATH="$PATH:/usr/lib/dart/bin"' >> ~/.profile
+          source ~/.profile
+          pub get
+          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
+      - name: Build(macos)
+        if: matrix.os == 'macos-latest'
+        run: |
+          pub get
+          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: bin
+          path: bin
+  execute:
+    name: Run artifact
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+            file-name: windows.exe
+          - os: ubuntu-latest
+            file-name: ubuntu
+          - os: macos-latest
+            file-name: macos
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: bin
+      - name: Run(windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd bin
+#          .\${{ matrix.file-name }}
+      - name: Run(ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd bin
+          chmod 755 ${{ matrix.file-name }}
+#          ./${{ matrix.file-name }}
+      - name: Run(macos)
+        if: matrix.os == 'macos-latest'
+        run: |
+          cd bin
+          chmod 755 ${{ matrix.file-name }}
+#          ./${{ matrix.file-name }}
