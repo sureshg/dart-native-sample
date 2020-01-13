@@ -61,9 +61,9 @@ jobs:
           dart2native bin/main.dart -o bin/${{ matrix.file-name }}
       - name: Upload artifact
         uses: actions/upload-artifact@v1
-        with:
-          name: bin
-          path: bin
+#        with:
+#          name: bin
+#          path: bin
   execute:
     name: Run artifact
     needs: build
