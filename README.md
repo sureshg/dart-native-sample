@@ -23,6 +23,10 @@ $ dart2native bin/main.dart -DdefaultPort=8445 -o test-server
 $ ./test-server
 ```
 
+#### Misc
+ * https://github.com/DanTup/gh-actions
+ * https://github.com/DanTup/dart-native-executables
+ * https://blog.dantup.com/2019/11/easily-compiling-dart-to-native-executables-for-windows-linux-macos-with-github-actions/
 
 [Dart2Native]: https://dart.dev/tools/dart2native
 [github-action]: https://github.com/sureshg/dart-native-sample/actions
