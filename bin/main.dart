@@ -3,19 +3,18 @@ import 'dart:io';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:dart_native_sample/utils.dart' as cert_util;
-import 'package:resource/resource.dart';
+import 'package:puppeteer/puppeteer.dart';
 
 void main() async {
   print('Using DartLang: ${Platform.version}');
   registerSignalHandler();
+  await puppeteerExec();
 
   // Read the certs and key
   String cert, key;
   try {
-    cert =
-        await const Resource('lib/certs/cert.pem').readAsString(encoding: utf8);
-    key =
-        await const Resource('lib/certs/key.pem').readAsString(encoding: utf8);
+    cert = await File('lib/certs/cert.pem').readAsString(encoding: utf8);
+    key = await File('lib/certs/key.pem').readAsString(encoding: utf8);
   } catch (e, s) {
     //stderr.writeln(s);
     print(e);
@@ -60,6 +59,22 @@ void printCertDetails(HttpClientResponse res) {
   print('Server Cert Subject: ${res.certificate.subject}');
   var certData = X509Utils.x509CertificateFromPem(res.certificate.pem);
   print('Server Cert SAN: ${certData.subjectAlternativNames}');
+}
+
+void puppeteerExec() async {
+  print('Executing puppeteer action...');
+  // Start the browser and go to a web page
+  var browser = await puppeteer.launch();
+  var page = await browser.newPage();
+
+  // Setup the dimensions and user-agent of a particular phone
+  await page.emulate(puppeteer.devices.pixel2XL);
+  await page.goto('https://www.github.com', wait: Until.networkIdle);
+  // Take a screenshot of the page
+  var screenshot = await page.screenshot();
+  // Save it to a file
+  await File('github.png').writeAsBytes(screenshot);
+  await browser.close();
 }
 
 /// Handle all Http requests
