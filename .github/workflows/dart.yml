@@ -72,6 +72,7 @@ jobs:
 
       - name: Dart2Native Build
         run: |
+          dart --version
           dart2native bin/main.dart -v -DdefaultPort=8445 -o ${{ matrix.bin-name }}
           echo "The binary file name is ${{ matrix.bin-name }}"
 

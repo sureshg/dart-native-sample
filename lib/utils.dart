@@ -1,4 +1,4 @@
-// Cert
+// A self signed cert (Used only for testing)
 const String cert = '''-----BEGIN CERTIFICATE-----
 MIIF1zCCA7+gAwIBAgIUM7I0WZZ3i5gtVpOUaUDKLQ4hKLQwDQYJKoZIhvcNAQEL
 BQAwXjESMBAGA1UEAwwJbG9jYWxob3N0MQswCQYDVQQGEwJVUzETMBEGA1UECAwK
