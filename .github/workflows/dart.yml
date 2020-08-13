@@ -47,12 +47,15 @@ jobs:
         with:
           channel: dev
 
+      - name: Fetch Dependencies
+        run: pub get
+
       - name: Dart2Native Build
         run: |
           tgz_file="${{ matrix.bin-name }}.tar.gz"
           dart2native bin/main.dart -v -DdefaultPort=8445 -o ${{ matrix.bin-name }}
           tar -cvzf $tgz_file ${{ matrix.bin-name }}
-          chmod +x tgz_file
+          chmod +x $tgz_file
           echo The binary file name is $tgz_file
 
       - name: Uploading ${{ matrix.bin-name }}.tar.gz
