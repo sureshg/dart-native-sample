@@ -1,24 +1,63 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:dart_native_sample/utils.dart' as cert_util;
+import 'package:path/path.dart';
 import 'package:puppeteer/puppeteer.dart';
 
-void main() async {
-  print('Using DartLang: ${Platform.version}');
-  registerSignalHandler();
-  await puppeteerExec();
+void main(List<String> args) async {
+  var parser = ArgParser();
+  parser.addFlag('shutdown',
+      abbr: 's',
+      help: 'Shutdown the server after serving first request',
+      defaultsTo: false);
+
+  parser.addOption('url',
+      abbr: 'l', help: 'Take screenshot of the URL', defaultsTo: '');
+
+  parser.addFlag('help', abbr: 'h', help: 'Show this help and exit',
+      callback: (help) {
+    if (help) {
+      print('''
+Runtime Env:
+ OS: ${Platform.operatingSystem}: ${Platform.operatingSystemVersion}
+ Dart: ${Platform.version}
+''');
+      print(parser.usage);
+      exit(0);
+    }
+  });
+
+  var argResults = parser.parse(args);
+  var url = argResults['url'].toString();
+  var shutdown = argResults['shutdown'].toString().toLowerCase() == 'true';
+
+  if (url.isNotEmpty) {
+    var uri = Uri.tryParse(url);
+    if (uri != null) {
+      await takeScreenShotOf(uri);
+    } else {
+      print('Invalid uri provided: $uri');
+    }
+  }
+
+  if (!shutdown) {
+    print('Registering the Signal handlers...');
+    registerSignalHandler();
+  }
 
   // Read the certs and key
   String cert, key;
   try {
-    cert = await File('lib/certs/cert.pem').readAsString(encoding: utf8);
-    key = await File('lib/certs/key.pem').readAsString(encoding: utf8);
+    print('Looking for certs in the current directory ${current}');
+    cert = await File('cert.pem').readAsString(encoding: utf8);
+    key = await File('key.pem').readAsString(encoding: utf8);
   } catch (e, s) {
     //stderr.writeln(s);
     print(e);
-    print('Using the default certs');
+    print('Using the default certs!');
     cert = cert_util.cert;
     key = cert_util.key;
   }
@@ -41,6 +80,7 @@ void main() async {
   // Send HTTPS request using [HttpClient]
   print('Sending ${uri.scheme} request : ${uri.path}');
   var client = HttpClient(context: securityContext)
+    ..connectionTimeout = Duration(seconds: 5)
     ..userAgent = 'Dart2NativeApp';
   var req = await client.getUrl(uri)
     ..headers.contentType = ContentType.json
@@ -52,6 +92,11 @@ void main() async {
   var resString = await utf8.decoder.bind(res).join();
   var resJson = json.decode(resString) as Map<String, dynamic>;
   print('Response JSON  : $resJson');
+
+  if (shutdown) {
+    print('Shutting down the server...');
+    await server.close(force: true);
+  }
 }
 
 /// Print the server cert details
@@ -61,19 +106,20 @@ void printCertDetails(HttpClientResponse res) {
   print('Server Cert SAN: ${certData.subjectAlternativNames}');
 }
 
-void puppeteerExec() async {
-  print('Executing puppeteer action...');
+// Take the screenshot of a url using puppeteer.
+void takeScreenShotOf(Uri uri) async {
+  print('Getting the screenshot of ${uri}');
   // Start the browser and go to a web page
   var browser = await puppeteer.launch();
   var page = await browser.newPage();
 
   // Setup the dimensions and user-agent of a particular phone
   await page.emulate(puppeteer.devices.pixel2XL);
-  await page.goto('https://www.github.com', wait: Until.networkIdle);
+  await page.goto(uri.toString(), wait: Until.networkIdle);
   // Take a screenshot of the page
   var screenshot = await page.screenshot();
   // Save it to a file
-  await File('github.png').writeAsBytes(screenshot);
+  await File('${uri.host}.png').writeAsBytes(screenshot);
   await browser.close();
 }
 

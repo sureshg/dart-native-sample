@@ -1,6 +1,5 @@
-name: Dart2Native Build
+name: Dart Build
 
-# Trigger setup
 on:
   pull_request:
     branches:
@@ -9,18 +8,61 @@ on:
     branches:
       - master
 
-# Build Jobs
 jobs:
-  build:
-
+  jit:
+    name: Run using DartVM
     runs-on: ubuntu-latest
 
     container:
-      image:  google/dart:latest
+      image: google/dart:dev
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: pub get
-    - name: Run tests
-      run: pub run test
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: pub get
+      - name: Run tests
+        run: pub run test
+
+  aot:
+    name: Dart2Native AOT build
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        include:
+          - os: ubuntu-latest
+            bin-name: hello-linux
+          - os: macOS-latest
+            bin-name: hello-mac
+          - os: windows-latest
+            bin-name: hello-windows.exe
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install Dart
+        uses: DanTup/gh-actions/setup-dart@master
+        with:
+          channel: dev
+
+      - name: Dart2Native Build
+        run: |
+          tgz_file="${{ matrix.bin-name }}.tar.gz"
+          dart2native bin/main.dart -v -DdefaultPort=8445 -o ${{ matrix.bin-name }}
+          tar -cvzf $tgz_file ${{ matrix.bin-name }}
+          chmod +x tgz_file
+          echo The binary file name is $tgz_file
+
+      - name: Uploading ${{ matrix.bin-name }}.tar.gz
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: native-executables
+          path: |
+            ${{ matrix.bin-name }}.tar.gz
+          if-no-files-found: error
+
+
+

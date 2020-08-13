@@ -1,9 +1,21 @@
 ## Dart2Native sample web server app.
 
- A sample dart web app compiles to native executable using [Dart2Native][Dart2Native] tool.
+ `AOT` compiles a sample `Dart` web server to native executable for `Windows`, `Linux` and `macOS` using [Dart2Native][Dart2Native] tool.
 
 [![GitHub Workflow Status][ShieldIO-Badge]][github-action]
 
+
+#### Build
+
+ - Download [DartLang](https://dart.dev/get-dart)
+ 
+ - Build
+ 
+    ```bash
+    $ dart2native bin/main.dart -DdefaultPort=8445 -o test-server 
+    $ ./test-server --help 
+    $ ./test-server -l https://google.com -s
+    ```
 
 #### Generate X509 Cert
 
@@ -14,13 +26,6 @@ $ openssl req -newkey rsa:4096 \
     -out cert.pem \
     -keyout key.pem \
     -subj "/C=US/ST=California/L=San Jose/O=Suresh/OU=Dev/CN=localhost"
-```
-
-#### Build & Run
-
-```bash
-$ dart2native bin/main.dart -DdefaultPort=8445 -o test-server 
-$ ./test-server
 ```
 
 #### Misc
