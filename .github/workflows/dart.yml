@@ -121,10 +121,14 @@ jobs:
       - name: Executing on (${{ matrix.os }})
         if: startsWith(matrix.os, 'windows')
         run: |
-          .\${{ matrix.file-name }} -s
+          set server = ${{ matrix.bin-name }}
+          .\%server% --help
+          .\%server% -s
 
       - name: Executing on (${{ matrix.os }})
-        if: startsWith(matrix.os, 'windows') != true
+        if: "!startsWith(matrix.os, 'windows')"
         run: |
-          chmod +x ${{ matrix.file-name }}
-          ./${{ matrix.file-name }} -s
+          server=${{ matrix.bin-name }}
+          chmod +x $server
+          ./$server --help
+          ./$server -s
