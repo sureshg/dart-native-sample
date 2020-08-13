@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
         include:
           - os: ubuntu-latest
             bin-name: test-server-linux
@@ -58,11 +58,11 @@ jobs:
           dart2native bin/main.dart -v -DdefaultPort=8445 -o ${{ matrix.bin-name }}
           echo The binary file name is ${{ matrix.bin-name }}
 
-      - name: Uploading ${{ matrix.bin-name }}.tar.gz
+      - name: Uploading ${{ matrix.bin-name }}
         if: success()
         uses: actions/upload-artifact@v2
         with:
-          name: native-executables
+          name: ${{ matrix.bin-name }}
           path: |
             ${{ matrix.bin-name }}
           if-no-files-found: error

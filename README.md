@@ -34,6 +34,6 @@ $ openssl req -newkey rsa:4096 \
  * https://blog.dantup.com/2019/11/easily-compiling-dart-to-native-executables-for-windows-linux-macos-with-github-actions/
 
 [Dart2Native]: https://dart.dev/tools/dart2native
-[github-action]: https://github.com/sureshg/dart-native-sample/actions
-[Github-Actions-Badge]: https://github.com/sureshg/dart-native-sample/workflows/Dart%20CI/badge.svg?branch=master
-[ShieldIO-Badge]: https://img.shields.io/github/workflow/status/sureshg/dart-native-sample/Dart%20CI/master?label=Dart%20CI&style=for-the-badge
+[github-action]: https://github.com/sureshg/dart-native-sample/actions?query=workflow%3A%22Dart+Build%22
+[Github-Actions-Badge]: https://github.com/sureshg/dart-native-sample/workflows/Dart%20Build/badge.svg?branch=master
+[ShieldIO-Badge]: https://img.shields.io/github/workflow/status/sureshg/dart-native-sample/Dart%20Build?color=green&label=Dart%20Build&logo=Github-Actions&logoColor=green&style=for-the-badge
