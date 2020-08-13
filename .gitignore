@@ -19,3 +19,7 @@ build/
 doc/api/
 test-server
 .local-chromium/
+
+# Test converage
+/test/.test_coverage.dart
+/coverage/lcov.info

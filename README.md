@@ -1,14 +1,18 @@
 ## Dart2Native sample web server app.
 
- `AOT` compiles a sample `Dart` web server to native executable for `Windows`, `Linux` and `macOS` using [Dart2Native][Dart2Native] tool.
+ `AOT` compiles a sample `Dart` web server to native executable for `Windows`, `Linux` and `macOS` using [Dart2Native][dart2native_url] tool.
 
-[![GitHub Workflow Status][ShieldIO-Badge]][github-action]
+[![GitHub Workflow Status][shieldio_img]][gha_url] [![Style guide][sty_img]][sty_url]
 
 
 #### Build
 
- - Download [DartLang](https://dart.dev/get-dart)
- 
+ - Install [Dart SDK](https://dart.dev/get-dart)
+   
+   ```bash
+   $ brew tap dart-lang/dart
+   $ brew install dart
+   ```
  - Build
  
     ```bash
@@ -29,11 +33,14 @@ $ openssl req -newkey rsa:4096 \
 ```
 
 #### Misc
+
+ * https://github.com/cedx/setup-dart
  * https://github.com/DanTup/gh-actions
  * https://github.com/DanTup/dart-native-executables
- * https://blog.dantup.com/2019/11/easily-compiling-dart-to-native-executables-for-windows-linux-macos-with-github-actions/
 
-[Dart2Native]: https://dart.dev/tools/dart2native
-[github-action]: https://github.com/sureshg/dart-native-sample/actions?query=workflow%3A%22Dart+Build%22
-[Github-Actions-Badge]: https://github.com/sureshg/dart-native-sample/workflows/Dart%20Build/badge.svg?branch=master
-[ShieldIO-Badge]: https://img.shields.io/github/workflow/status/sureshg/dart-native-sample/Dart%20Build?color=green&label=Dart%20Build&logo=Github-Actions&logoColor=green&style=for-the-badge
+[dart2native_url]: https://dart.dev/tools/dart2native
+[gha_url]: https://github.com/sureshg/dart-native-sample/actions
+[gha_img]: https://github.com/sureshg/dart-native-sample/workflows/Dart%20Build/badge.svg?branch=master
+[shieldio_img]: https://img.shields.io/github/workflow/status/sureshg/dart-native-sample/Dart%20Build?color=green&label=Dart%20Build&logo=Github-Actions&logoColor=green&style=for-the-badge
+[sty_url]: https://pub.dev/packages/pedantic
+[sty_img]: https://img.shields.io/badge/style-pedantic-40c4ff.svg?style=for-the-badge&logo=Dart&logoColor=40c4ff
