@@ -10,21 +10,24 @@ on:
 
 jobs:
   jit:
-    name: Run using DartVM
+    name: DartVM (JIT)
     runs-on: ubuntu-latest
 
     container:
       image: google/dart:dev
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
       - name: Install dependencies
         run: pub get
+
       - name: Run tests
         run: pub run test
 
   aot:
-    name: Dart2Native AOT build
+    name: Dart2Native (AOT)
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -33,11 +36,11 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         include:
           - os: ubuntu-latest
-            bin-name: hello-linux
-          - os: macOS-latest
-            bin-name: hello-mac
+            bin-name: test-server-linux
+          - os: macos-latest
+            bin-name: test-server-mac
           - os: windows-latest
-            bin-name: hello-windows.exe
+            bin-name: test-server-windows.exe
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -52,11 +55,8 @@ jobs:
 
       - name: Dart2Native Build
         run: |
-          tgz_file="${{ matrix.bin-name }}.tar.gz"
           dart2native bin/main.dart -v -DdefaultPort=8445 -o ${{ matrix.bin-name }}
-          tar -cvzf $tgz_file ${{ matrix.bin-name }}
-          chmod +x $tgz_file
-          echo The binary file name is $tgz_file
+          echo The binary file name is ${{ matrix.bin-name }}
 
       - name: Uploading ${{ matrix.bin-name }}.tar.gz
         if: success()
@@ -64,7 +64,7 @@ jobs:
         with:
           name: native-executables
           path: |
-            ${{ matrix.bin-name }}.tar.gz
+            ${{ matrix.bin-name }}
           if-no-files-found: error
 
 
