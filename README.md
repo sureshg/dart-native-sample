@@ -17,7 +17,10 @@
  
     ```bash
     $ dart2native bin/main.dart -DdefaultPort=8445 -o test-server 
+    
+    # Running the server
     $ ./test-server --help 
+    $ ./test-server -s
     $ ./test-server -l https://google.com -s
     ```
 
