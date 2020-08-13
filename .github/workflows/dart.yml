@@ -124,7 +124,7 @@ jobs:
           .\${{ matrix.file-name }} -s
 
       - name: Executing on (${{ matrix.os }})
-        if: !startsWith(matrix.os, 'windows')
+        if: startsWith(matrix.os, 'windows') != true
         run: |
           chmod +x ${{ matrix.file-name }}
           ./${{ matrix.file-name }} -s
