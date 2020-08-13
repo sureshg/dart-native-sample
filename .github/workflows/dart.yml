@@ -68,9 +68,17 @@ jobs:
 
       # - name: Generate Coverage
       #   run: pub run test_coverage --no-badge
-      #
+
       # - name: Upload Coverage
       # uses: codecov/codecov-action@v1.0.7
+
+      # - name: Cache Dart packages
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.pub-cache
+      #     key: ${{ runner.os }}-dart-${{ hashFiles('**/pubspec.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-dart-
 
       - name: Dart2Native Build
         run: |
@@ -111,11 +119,12 @@ jobs:
           name: ${{ matrix.bin-name }}
 
       - name: Executing on (${{ matrix.os }})
-        if: matrix.os == 'windows-latest'
+        if: startsWith(matrix.os, 'windows')
         run: |
           .\${{ matrix.file-name }} -s
 
       - name: Executing on (${{ matrix.os }})
+        if: !startsWith(matrix.os, 'windows')
         run: |
           chmod +x ${{ matrix.file-name }}
           ./${{ matrix.file-name }} -s
