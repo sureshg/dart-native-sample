@@ -113,9 +113,9 @@ jobs:
       - name: Executing on (${{ matrix.os }})
         if: matrix.os == 'windows-latest'
         run: |
-          .\${{ matrix.file-name }}
+          .\${{ matrix.file-name }} -s
 
       - name: Executing on (${{ matrix.os }})
         run: |
           chmod +x ${{ matrix.file-name }}
-          ./${{ matrix.file-name }}
+          ./${{ matrix.file-name }} -s
