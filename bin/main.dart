@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:dart_native_sample/utils.dart' as cert_util;
+import 'package:http/io_client.dart';
 import 'package:path/path.dart';
 import 'package:puppeteer/puppeteer.dart';
 
@@ -20,11 +21,7 @@ void main(List<String> args) async {
   parser.addFlag('help', abbr: 'h', help: 'Show this help and exit',
       callback: (help) {
     if (help) {
-      print('''
-Runtime Env:
- OS: ${Platform.operatingSystem}: ${Platform.operatingSystemVersion}
- Dart: ${Platform.version}
-''');
+      printEnv();
       print(parser.usage);
       exit(0);
     }
@@ -72,17 +69,23 @@ Runtime Env:
   var server = await HttpServer.bindSecure(
       InternetAddress.anyIPv4, port, securityContext);
 
-  var uri = Uri.parse('https://${server.address.host}:${server.port}/');
+  var uri = Uri.parse('https://localhost:${server.port}/');
   print('Listening on $uri...');
 
   handleRequests(server);
 
   // Send HTTPS request using [HttpClient]
   print('Sending ${uri.scheme} request : ${uri.path}');
-  var client = HttpClient(context: securityContext)
+  var iohClient = HttpClient(context: securityContext)
     ..connectionTimeout = Duration(seconds: 5)
+    ..idleTimeout = Duration(seconds: 5)
     ..userAgent = 'Dart2NativeApp';
-  var req = await client.getUrl(uri)
+
+  // Multiplatform client.
+  var client = IOClient(iohClient);
+  print('Multiplatform http client: $client');
+
+  var req = await iohClient.getUrl(uri)
     ..headers.contentType = ContentType.json
     ..followRedirects = true;
   var res = await req.close();
@@ -97,6 +100,15 @@ Runtime Env:
     print('Shutting down the server...');
     await server.close(force: true);
   }
+}
+
+/// Print OS and runtime details
+void printEnv() {
+  print('''
+Runtime Env:
+ OS: ${Platform.operatingSystem}: ${Platform.operatingSystemVersion}
+   Dart: ${Platform.version}
+  ''');
 }
 
 /// Print the server cert details
