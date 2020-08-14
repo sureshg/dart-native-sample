@@ -2,7 +2,8 @@
 
  `AOT` compiles a sample `Dart` web server to native executable for `Windows`, `Linux` and `macOS` using [Dart2Native][dart2native_url] tool.
 
-[![GitHub Workflow Status][shieldio_img]][gha_url] [![Style guide][sty_img]][sty_url]
+[![GitHub Workflow Status][shieldio_img]][gha_url] 
+[![Style guide][sty_img]][sty_url]
 
 
 #### Build
@@ -42,8 +43,10 @@ $ openssl req -newkey rsa:4096 \
  * https://github.com/DanTup/dart-native-executables
 
 [dart2native_url]: https://dart.dev/tools/dart2native
+
+[sty_url]: https://pub.dev/packages/pedantic
+[sty_img]: https://img.shields.io/badge/style-pedantic-40c4ff.svg?style=for-the-badge&logo=Dart&logoColor=40c4ff
+
 [gha_url]: https://github.com/sureshg/dart-native-sample/actions
 [gha_img]: https://github.com/sureshg/dart-native-sample/workflows/Dart%20Build/badge.svg?branch=master
 [shieldio_img]: https://img.shields.io/github/workflow/status/sureshg/dart-native-sample/Dart%20Build?color=green&label=Dart%20Build&logo=Github-Actions&logoColor=green&style=for-the-badge
-[sty_url]: https://pub.dev/packages/pedantic
-[sty_img]: https://img.shields.io/badge/style-pedantic-40c4ff.svg?style=for-the-badge&logo=Dart&logoColor=40c4ff
