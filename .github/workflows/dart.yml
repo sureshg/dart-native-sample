@@ -44,7 +44,7 @@ jobs:
           - os: macos-latest
             bin-name: test-server-mac
           - os: windows-latest
-            bin-name: test-server-windows.exe
+            bin-name: test-server-win.exe
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -101,7 +101,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
         include:
@@ -110,7 +110,7 @@ jobs:
           - os: macos-latest
             bin-name: test-server-mac
           - os: windows-latest
-            bin-name: test-server-windows.exe
+            bin-name: test-server-win.exe
 
     steps:
       - name: Download artifact
