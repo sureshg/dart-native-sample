@@ -121,9 +121,9 @@ jobs:
       - name: Executing on (${{ matrix.os }})
         if: startsWith(matrix.os, 'windows')
         run: |
-          set server = ${{ matrix.bin-name }}
-          .\%server% --help
-          .\%server% -s
+           $server = ${{ matrix.bin-name }}
+          .\$server --help
+          .\$server -s
 
       - name: Executing on (${{ matrix.os }})
         if: "!startsWith(matrix.os, 'windows')"

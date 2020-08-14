@@ -79,7 +79,12 @@ void main(List<String> args) async {
   var iohClient = HttpClient(context: securityContext)
     ..connectionTimeout = Duration(seconds: 5)
     ..idleTimeout = Duration(seconds: 5)
-    ..userAgent = 'Dart2NativeApp';
+    ..userAgent = 'Dart2NativeApp'
+    ..badCertificateCallback = (cert, host, port) {
+      print(
+          'Got some cert error. CN: ${cert.subject}, Host: $host, Port: $port');
+      return true;
+    };
 
   // Multiplatform client.
   var client = IOClient(iohClient);
