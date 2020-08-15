@@ -7,6 +7,8 @@ import 'package:dart_native_sample/utils.dart' as cert_util;
 import 'package:http/io_client.dart';
 import 'package:path/path.dart';
 import 'package:puppeteer/puppeteer.dart';
+import 'package:rsocket/payload.dart';
+import 'package:rsocket/rsocket_connector.dart';
 
 void main(List<String> args) async {
   var parser = ArgParser();
@@ -44,6 +46,9 @@ void main(List<String> args) async {
     print('Registering the Signal handlers...');
     registerSignalHandler();
   }
+
+  // rsocket client test
+  await rsocketDemo();
 
   // Read the certs and key
   String cert, key;
@@ -112,8 +117,8 @@ void printEnv() {
   print('''
 Runtime Env:
  OS: ${Platform.operatingSystem}: ${Platform.operatingSystemVersion}
-   Dart: ${Platform.version}
-  ''');
+ Dart: ${Platform.version}
+''');
 }
 
 /// Print the server cert details
@@ -123,7 +128,7 @@ void printCertDetails(HttpClientResponse res) {
   print('Server Cert SAN: ${certData.subjectAlternativNames}');
 }
 
-// Take the screenshot of a url using puppeteer.
+/// Take the screenshot of a url using puppeteer.
 void takeScreenShotOf(Uri uri) async {
   print('Getting the screenshot of ${uri}');
   // Start the browser and go to a web page
@@ -138,6 +143,24 @@ void takeScreenShotOf(Uri uri) async {
   // Save it to a file
   await File('${uri.host}.png').writeAsBytes(screenshot);
   await browser.close();
+}
+
+/// rsocket websocket transport demo.
+void rsocketDemo() async {
+  var rsocketUrl = 'wss://rsocket-demo.herokuapp.com/rsocket';
+  print('Connecting to rsocket url: $rsocketUrl');
+  var client = await RSocketConnector.create().connect(rsocketUrl);
+
+  print('Start streaming the data...');
+  var stream = await client.requestStream(Payload.fromText('', 'hello'));
+
+  var i = 1;
+  await stream.take(25).forEach((e) {
+    print('${i++} - ${e.getDataUtf8()}');
+  });
+
+  print('Closing the rsocket connection.');
+  client.close();
 }
 
 /// Handle all Http requests
