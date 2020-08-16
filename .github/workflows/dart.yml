@@ -10,13 +10,16 @@ on:
   schedule:
     - cron: 0 0 1 * 0
 
+env:
+  channel: dev
+
 jobs:
   jit:
     name: DartVM (JIT)
     runs-on: ubuntu-latest
 
     container:
-      image: google/dart:dev
+      image: google/dart:${{ env.channel }}
 
     steps:
       - name: Checkout Repo
@@ -48,7 +51,7 @@ jobs:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
         channel:
-          - dev
+          - ${{ env.channel }}
         include:
           - os: ubuntu-latest
             bin-name: test-server-linux
@@ -60,10 +63,10 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Install Dart SDK ${{matrix.channel}} on ${{matrix.os}}
+      - name: Install Dart SDK ${{ matrix.channel }} on ${{ matrix.os }}
         uses: cedx/setup-dart@v2
         with:
-          release-channel: ${{matrix.channel}}
+          release-channel: ${{ matrix.channel }}
 
       - name: Fetch Dependencies
         run: pub get
@@ -106,8 +109,8 @@ jobs:
             ${{ matrix.bin-name }}
           if-no-files-found: error
 
-  execute:
-    name: Run Native Binaries
+  test:
+    name: Test Native Binaries
     needs: aot
     runs-on: ${{ matrix.os }}
 
@@ -129,14 +132,14 @@ jobs:
         with:
           name: ${{ matrix.bin-name }}
 
-      - name: Executing on (${{ matrix.os }})
+      - name: Testing on windows
         if: startsWith(matrix.os, 'windows')
         run: |
           $server = "${{ matrix.bin-name }}"
           iex ".\$server --help"
           iex ".\$server -s"
 
-      - name: Executing on (${{ matrix.os }})
+      - name: Testing on linux/macos
         if: "!startsWith(matrix.os, 'windows')"
         run: |
           server=${{ matrix.bin-name }}
