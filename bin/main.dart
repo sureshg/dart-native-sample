@@ -147,7 +147,7 @@ void takeScreenShotOf(Uri uri) async {
 
 /// rsocket websocket transport demo.
 void rsocketDemo() async {
-  var rsocketUrl = 'wss://rsocket-demo.herokuapp.com/rsocket';
+  var rsocketUrl = 'wss://demo.rsocket.io/rsocket';
   print('Connecting to rsocket url: $rsocketUrl');
   var client = await RSocketConnector.create().connect(rsocketUrl);
 
