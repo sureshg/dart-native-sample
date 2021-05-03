@@ -39,10 +39,10 @@ $ openssl req -newkey rsa:4096 \
 
 #### Misc
 
- * https://hub.docker.com/r/google/dart-runtime
- * https://github.com/cedx/setup-dart
- * https://github.com/DanTup/gh-actions
- * https://github.com/DanTup/dart-native-executables
+ * [Setup Dart Action](https://github.com/marketplace/actions/setup-dart-sdk)
+ * [Google Dart Image](https://hub.docker.com/r/google/dart-runtime)
+ * [DanTup Github Actions](https://github.com/DanTup/gh-actions)
+ * [Native Image Example](https://github.com/DanTup/dart-native-executables)
  * https://tio.run/#powershell
  
 [rsocket]: https://rsocket.io
