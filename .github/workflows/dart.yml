@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v3.3.0
 
       - id: install
         name: Install dependencies
@@ -61,7 +61,7 @@ jobs:
             bin-name: test-server-win.exe
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v3.3.0
 
       - name: Install Dart SDK ${{ matrix.sdk }} on ${{ matrix.os }}
         uses: dart-lang/setup-dart@v1
